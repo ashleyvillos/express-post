@@ -1,11 +1,14 @@
-import { Box } from "@chakra-ui/react";
 import type { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/router";
-// import { Post } from "../../types";
+import { useState, useEffect } from "react";
+import { Select } from '@chakra-ui/react'
+
 
 const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const post = props.post
   const comments = props.comments
+  const [filter, setFilter] = useState('none')
+  const [filteredComments, setFilteredComments] = useState(comments)
+
   const styles = {
     title: {
       fontSize: '1.3em',
@@ -21,6 +24,7 @@ const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideP
     commentHeader: {
       fontSize: '1.2em',
       fontWeight: 'bold',
+      marginRight: '1em'
     },
     commentItemContainer: {
       display: 'flex', 
@@ -37,6 +41,15 @@ const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideP
     },
     comment: {
       fontSize: '0.9em',
+    },
+  }
+  
+  const filterChange = (value: number) => {
+    if (value ===- 1) {
+      setFilteredComments(comments)
+    } else {
+      let newComments = comments.filter((comment: any) => comment.id === value)
+      setFilteredComments(newComments)
     }
   }
 
@@ -51,8 +64,20 @@ const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideP
         </span>
       </div>
       <div style={styles.commentContainer}>
-        <span style={styles.commentHeader}> Comments: </span>
-        {comments.map((comment: any, index: number) => (
+        <div>
+          <span style={styles.commentHeader}> Comments: </span>
+          <select onChange={(e) => setFilter(e.currentTarget.value)}>
+            <option value="none"> No Filter  </option>
+            <option value="user"> Filter by user </option>
+          </select>
+          <select style={{ marginLeft: '1em' }} hidden={filter !== 'user'} onChange={(e) => filterChange(parseInt(e.currentTarget.value))}>
+            <option value={-1}> All Users </option>
+            {comments.map((comment: any, index: number) => (
+              <option key={`user-option-${index}`} value={comment.id}> {`(${comment.id}) ${comment.email}`} </option>
+            ))}
+          </select>
+        </div>
+        {filteredComments.map((comment: any, index: number) => (
           <div key={`comment-${index}`} style={styles.commentItemContainer}> 
             <div>
               <span style={styles.name}> {comment.name}</span>
