@@ -1,7 +1,5 @@
 import type { NextPage, GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useState, useEffect } from "react";
-import { Select } from '@chakra-ui/react'
-
+import { useState } from "react";
 
 const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const post = props.post
