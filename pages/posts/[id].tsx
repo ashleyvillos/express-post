@@ -41,8 +41,15 @@ const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideP
       fontSize: '0.9em',
     },
   }
+
+  const filterChange = (value: string) => {
+    if (value === 'none') {
+      userFilterChange(-1)
+    } 
+    setFilter(value)
+  }
   
-  const filterChange = (value: number) => {
+  const userFilterChange = (value: number) => {
     if (value ===- 1) {
       setFilteredComments(comments)
     } else {
@@ -64,11 +71,11 @@ const Post: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideP
       <div style={styles.commentContainer}>
         <div>
           <span style={styles.commentHeader}> Comments: </span>
-          <select onChange={(e) => setFilter(e.currentTarget.value)}>
+          <select onChange={(e) => filterChange(e.currentTarget.value)}>
             <option value="none"> No Filter  </option>
             <option value="user"> Filter by user </option>
           </select>
-          <select style={{ marginLeft: '1em' }} hidden={filter !== 'user'} onChange={(e) => filterChange(parseInt(e.currentTarget.value))}>
+          <select style={{ marginLeft: '1em' }} hidden={filter !== 'user'} onChange={(e) => userFilterChange(parseInt(e.currentTarget.value))}>
             <option value={-1}> All Users </option>
             {comments.map((comment: any, index: number) => (
               <option key={`user-option-${index}`} value={comment.id}> {`(${comment.id}) ${comment.email}`} </option>

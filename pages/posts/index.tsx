@@ -21,7 +21,14 @@ const Posts: NextPage = (props: InferGetServerSidePropsType<typeof getServerSide
     }
   }
 
-  const filterChange = (value: number) => {
+  const filterChange = (value: string) => {
+    if (value === 'none') {
+      userFilterChange(-1)
+    } 
+    setFilter(value)
+  }
+
+  const userFilterChange = (value: number) => {
     // if (value ===- 1) {
     //   setFilteredPosts(posts)
     // } else {
@@ -44,11 +51,11 @@ const Posts: NextPage = (props: InferGetServerSidePropsType<typeof getServerSide
   return (
     <Box w={"full"} h={"fit-content"}>
       <div>
-        <select onChange={(e) => setFilter(e.currentTarget.value)}>
+        <select onChange={(e) => filterChange(e.currentTarget.value)}>
           <option value="none"> No Filter  </option>
           <option value="user"> Filter by user </option>
         </select>
-        <select style={{ marginLeft: '1em' }} hidden={filter !== 'user'} onChange={(e) => filterChange(parseInt(e.currentTarget.value))}>
+        <select style={{ marginLeft: '1em' }} hidden={filter !== 'user'} onChange={(e) => userFilterChange(parseInt(e.currentTarget.value))}>
           <option value={-1}> All Users </option>
           {users.map((user: any, index: number) => (
             <option key={`user-option-${index}`} value={user.id}> {`(${user.id}) ${user.name}`} </option>
